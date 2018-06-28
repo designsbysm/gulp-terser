@@ -18,6 +18,12 @@ function gulpUglifyes(option){
           'script': str
         }, option);
 
+        // display any terser errors and stop
+        if (result.error) {
+          this.emit('error', new PluginError(PLUGIN_NAME, result.error.message));
+          return cb();
+        }
+
         file.contents = new Buffer(result.code);
         return cb(null, file);
       }catch(err){

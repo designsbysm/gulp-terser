@@ -1,3 +1,5 @@
+var colors = require('ansi-colors');
+var log = require('fancy-log');
 var through = require('through2');
 var terser = require('terser');
 var PluginError = require('plugin-error');
@@ -22,6 +24,13 @@ function gulpUglifyes(option){
         if (result.error) {
           this.emit('error', new PluginError(PLUGIN_NAME, result.error.message));
           return cb();
+        }
+
+        // display any terser warnings
+        if (result.warnings) {
+          result.warnings.forEach(function (message) {
+            log([colors.yellow(PLUGIN_NAME), message].join(' '));
+          });
         }
 
         file.contents = new Buffer(result.code);
